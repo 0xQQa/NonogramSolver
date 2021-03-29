@@ -6,8 +6,7 @@ class NonogramSolver:
     def __init__(self, solving_vector_x, solving_vector_y):
         self.check_err(solving_vector_x, solving_vector_y)
         self.dimension = self.define_dimension(solving_vector_y)
-        self.board = Board(self.dimension, solving_vector_x, solving_vector_y)
-        
+        self.board = Board(self.dimension, solving_vector_x, solving_vector_y)   
         self.solv_algo = SolvingAlgorithms()
 
     def check_err(self, solving_vector_x, solving_vector_y):
@@ -18,16 +17,12 @@ class NonogramSolver:
     
     def define_dimension(self, solving_vector_y):
         return len(solving_vector_y)
-
-    def solve_horizontally(self, index): 
-        board_list = self.board.get_column(index)
-        vector = self.board.get_vector_y(index)
-
-        print(board_list)
-        print(vector)
         
     def show(self): 
         offset = len(self.board.solving_vector_y[0]) * 2 + 2
+        minueses_amount = offset + self.board.dimension
+        print('\n', '-' * minueses_amount, f"step no.{self.solv_algo.steps}", '-' * minueses_amount)
+
         for row in self.board.solving_vector_x:
             print(' ' * offset, end='[ ')
             for field in row: print(field, end=' ')
@@ -36,23 +31,14 @@ class NonogramSolver:
         for row_id in range(len(self.board.solving_vector_y)):
             print('[', *self.board.solving_vector_y[row_id], ']', end='')
             print(self.board.show_row(row_id))
-
-    def solve(self):
+       
+    def solve(self, show_step=False):
         self.solv_algo.init_solv(self.board)
-        self.show()
+        if show_step: self.show()
 
-if __name__ == "__main__": 
-    solving_vector_x = [[0,0,0,0,2,0],
-                        [1,5,2,5,1,2]]
+        while not self.board.is_finished():
+            self.solv_algo.next_solv(self.board)
+            if show_step: self.show()    
 
-    solving_vector_y = [[2,1], 
-                        [1,3], 
-                        [1,2], 
-                        [0,3], 
-                        [0,4], 
-                        [0,1]]
-
-    ns = NonogramSolver(solving_vector_x, solving_vector_y) 
-    ns.solve()
-     
-    
+    def show_clean(self):
+        self.board.show()

@@ -1,7 +1,7 @@
 class SolvingAlgorithms:
 
     def __init__(self):
-        self.changes_made = False 
+        self.steps = 0
 
     def req_solv(self, list_to_swp, swp_indx_1, swp_indx_2, max_req, cur_req, results): 
         tmp_list = list_to_swp.copy()
@@ -55,6 +55,7 @@ class SolvingAlgorithms:
 
     def expand_req_solv_vec(self, results):
         new_results = []
+
         for i in range(len(results)):
             new_results.append([])
             for block_size in results[i]:
@@ -79,24 +80,68 @@ class SolvingAlgorithms:
                 if (lists_list[list_index][index]): hit_index.append(index)
                 else: miss_index.append(index)
 
-        changes_made = (len(hit_index) + len(miss_index)) > 0
-        self.changes_made |= changes_made
         return hit_index, miss_index
 
     def init_solv_vertically(self, board):
         for index in range(board.dimension):
             res = self.get_req_solv(board.get_vector_x(index), board.dimension)
             hits, misses = self.set_fields(res)
-            for hit in hits: board.set_hit(hit, index)
-            for miss in misses: board.set_hit(miss, index)
+            self.update_hit_miss_vertically(hits, misses, board, index)
 
     def init_solv_horizontally(self, board):
         for index in range(board.dimension):
             res = self.get_req_solv(board.get_vector_y(index), board.dimension)
             hits, misses = self.set_fields(res)
-            for hit in hits: board.set_hit(index, hit)
-            for miss in misses: board.set_hit(index, miss)
+            self.update_hit_miss_horizontally(hits, misses, board, index)
 
     def init_solv(self, board):
+        self.steps += 1
         self.init_solv_vertically(board)
         self.init_solv_horizontally(board)
+
+    def try_fit(self, results, compared_to):
+        solutions, max_matches_probability = [], 0
+
+        for tmp_list in results:
+            hits_probability = sum(list(map(lambda x,y: x == y == 1, tmp_list, compared_to)))   ##poprawic aby rozrnuial 1,-1,0
+            misses_probability = sum(list(map(lambda x,y: x == 0 and y == -1, tmp_list, compared_to))) 
+            matches_probability = hits_probability + misses_probability
+
+            if matches_probability == max_matches_probability:
+                solutions.append(tmp_list)
+                continue
+
+            if matches_probability > max_matches_probability:
+                solutions = [tmp_list]
+                max_matches_probability = matches_probability
+
+        return self.set_fields(solutions)
+
+    def next_solv_horizontally(self, board):
+        for index in range(board.dimension): 
+            to_comp, solv_vec = board.get_column(index), board.get_vector_y(index)
+            res = self.get_req_solv(solv_vec, board.dimension)
+            
+            hits, misses = self.try_fit(res, to_comp)
+            self.update_hit_miss_horizontally(hits, misses, board, index)
+            
+    def next_solv_vertically(self, board):
+        for index in range(board.dimension): 
+            to_comp, solv_vec = board.get_row(index), board.get_vector_x(index)
+            res = self.get_req_solv(solv_vec, board.dimension)
+            
+            hits, misses = self.try_fit(res, to_comp)
+            self.update_hit_miss_vertically(hits, misses, board, index)
+
+    def next_solv(self, board):
+        self.steps += 1
+        self.next_solv_horizontally(board)
+        self.next_solv_vertically(board)
+        
+    def update_hit_miss_vertically(self, hits, misses, board, index):
+        for hit in hits: board.set_hit(hit, index)
+        for miss in misses: board.set_miss(miss, index)
+
+    def update_hit_miss_horizontally(self, hits, misses, board, index):
+        for hit in hits: board.set_hit(index, hit)
+        for miss in misses: board.set_miss(index, miss)
