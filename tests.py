@@ -76,5 +76,5 @@ def t_4():
 if __name__ == "__main__": 
     solving_vector_x, solving_vector_y = t_4()
     ns = NonogramSolver(solving_vector_x, solving_vector_y) 
-    ns.solve()
+    ns.solve(show_step=False)
     ns.show_clean()

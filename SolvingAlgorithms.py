@@ -119,7 +119,7 @@ class SolvingAlgorithms:
 
     def next_solv_horizontally(self, board):
         for index in range(board.dimension): 
-            to_comp, solv_vec = board.get_column(index), board.get_vector_y(index)
+            to_comp, solv_vec = board.get_row(index), board.get_vector_y(index)
             res = self.get_req_solv(solv_vec, board.dimension)
             
             hits, misses = self.try_fit(res, to_comp)
@@ -127,7 +127,7 @@ class SolvingAlgorithms:
             
     def next_solv_vertically(self, board):
         for index in range(board.dimension): 
-            to_comp, solv_vec = board.get_row(index), board.get_vector_x(index)
+            to_comp, solv_vec = board.get_column(index), board.get_vector_x(index)
             res = self.get_req_solv(solv_vec, board.dimension)
             
             hits, misses = self.try_fit(res, to_comp)

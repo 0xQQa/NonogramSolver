@@ -12,7 +12,9 @@ class NonogramSolver:
     def check_err(self, solving_vector_x, solving_vector_y):
         set_x, set_y  = set(map(len, solving_vector_x)), set(map(len, solving_vector_y))
         same_x, same_y = len(set_x), len(set_y)
-        if same_x != 1 or same_y != 1: raise Exception("Invalid vector sizes!")
+        #x_miuses = 
+
+        if same_x != 1 or same_y != 1: raise Exception("Invalid inside vector sizes!")
         if set_x.pop() != len(solving_vector_y): raise Exception("Invalid vectors proportions!")
     
     def define_dimension(self, solving_vector_y):

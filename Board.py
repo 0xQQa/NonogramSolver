@@ -7,22 +7,16 @@ class Board:
         self.solving_vector_y = solving_vector_y    
     
     def get_column(self, index):
-        return self.board[index]
-
-    def get_row(self, index):
         return list(map(lambda row: row[index], self.board))
 
+    def get_row(self, index):
+        return self.board[index]
+        
     def set_hit(self, x, y):
         self.board[x][y] = 1
 
     def set_miss(self, x, y):
         self.board[x][y] = -1
-
-    def repleace_column(self, index, new_col):
-        for tmp_index in range(self.dimension): self.board[tmp_index][index] = new_col[tmp_index]
-
-    def repleace_row(self, index, new_row):
-        self.board[index] = new_row    
 
     def get_vector_y(self, index): 
         return self.solving_vector_y[index]
