@@ -45,7 +45,8 @@ class SolvingAlgorithms:
 
     def get_req_solv(self, solution_vec, dimension):
         tmp_solution_vec = solution_vec.copy()
-        while tmp_solution_vec[0] == 0: tmp_solution_vec.pop(0)
+        if sum(solution_vec) == 0: return [0 for i in range(dimension)]
+        while tmp_solution_vec[0] == 0: tmp_solution_vec.pop(0) #llook
 
         unit_amount = len(tmp_solution_vec)
         first_list = self.get_list_from_vector(tmp_solution_vec, dimension)
@@ -83,14 +84,14 @@ class SolvingAlgorithms:
         return hit_index, miss_index
 
     def init_solv_vertically(self, board):
-        for index in range(board.dimension):
-            res = self.get_req_solv(board.get_vector_x(index), board.dimension)
+        for index in range(board.dimension_x):
+            res = self.get_req_solv(board.get_vector_x(index), board.dimension_x)
             hits, misses = self.set_fields(res)
             self.update_hit_miss_vertically(hits, misses, board, index)
 
     def init_solv_horizontally(self, board):
-        for index in range(board.dimension):
-            res = self.get_req_solv(board.get_vector_y(index), board.dimension)
+        for index in range(board.dimension_y):
+            res = self.get_req_solv(board.get_vector_y(index), board.dimension_y)
             hits, misses = self.set_fields(res)
             self.update_hit_miss_horizontally(hits, misses, board, index)
 
@@ -103,7 +104,7 @@ class SolvingAlgorithms:
         solutions, max_matches_probability = [], 0
 
         for tmp_list in results:
-            hits_probability = sum(list(map(lambda x,y: x == y == 1, tmp_list, compared_to)))   ##poprawic aby rozrnuial 1,-1,0
+            hits_probability = sum(list(map(lambda x,y: x == y == 1, tmp_list, compared_to))) 
             misses_probability = sum(list(map(lambda x,y: x == 0 and y == -1, tmp_list, compared_to))) 
             matches_probability = hits_probability + misses_probability
 
@@ -118,18 +119,16 @@ class SolvingAlgorithms:
         return self.set_fields(solutions)
 
     def next_solv_horizontally(self, board):
-        for index in range(board.dimension): 
+        for index in range(board.dimension_y): 
             to_comp, solv_vec = board.get_row(index), board.get_vector_y(index)
-            res = self.get_req_solv(solv_vec, board.dimension)
-            
+            res = self.get_req_solv(solv_vec, board.dimension_x)
             hits, misses = self.try_fit(res, to_comp)
             self.update_hit_miss_horizontally(hits, misses, board, index)
             
     def next_solv_vertically(self, board):
-        for index in range(board.dimension): 
+        for index in range(board.dimension_x): 
             to_comp, solv_vec = board.get_column(index), board.get_vector_x(index)
-            res = self.get_req_solv(solv_vec, board.dimension)
-            
+            res = self.get_req_solv(solv_vec, board.dimension_y)         
             hits, misses = self.try_fit(res, to_comp)
             self.update_hit_miss_vertically(hits, misses, board, index)
 

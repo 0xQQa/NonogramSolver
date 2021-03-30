@@ -1,8 +1,9 @@
 class Board:
 
-    def __init__(self, dimension, solving_vector_x, solving_vector_y):
-        self.dimension = dimension
-        self.board = [[0 for _ in range(dimension)] for _ in range(dimension)]    
+    def __init__(self, dimension_x, dimension_y, solving_vector_x, solving_vector_y):
+        self.dimension_x, self.dimension_y = dimension_x, dimension_y
+        print(self.dimension_x, self.dimension_y)
+        self.board = [[0 for _ in range(dimension_x)] for _ in range(dimension_y)]    
         self.solving_vector_x = solving_vector_x
         self.solving_vector_y = solving_vector_y    
     
@@ -14,10 +15,10 @@ class Board:
         
     def set_hit(self, x, y):
         self.board[x][y] = 1
-
+        
     def set_miss(self, x, y):
         self.board[x][y] = -1
-
+        
     def get_vector_y(self, index): 
         return self.solving_vector_y[index]
 
@@ -34,7 +35,7 @@ class Board:
         return ret_str
 
     def show(self):
-        for index in range(self.dimension): print(self.show_row(index))
+        for index in range(self.dimension_y): print(self.show_row(index))
 
     def is_finished(self):
         for row in self.board:

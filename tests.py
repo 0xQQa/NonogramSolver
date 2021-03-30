@@ -72,9 +72,56 @@ def t_4():
 
     return solving_vector_x, solving_vector_y
 
+def t_5():
+    solving_vector_x = [[0,3,2,0,0],
+                        [0,2,3,0,0],
+                        [2,3,3,5,3]]
+
+    solving_vector_y = [[0,0,3], 
+                        [0,0,5], 
+                        [0,2,2], 
+                        [0,0,2],
+                        [0,0,2],
+                        [0,0,2],
+                        [0,0,0],
+                        [0,0,2],
+                        [0,0,2],
+                        [0,0,2]]
+
+    return solving_vector_x, solving_vector_y
+
+def t_6():
+    solving_vector_x = [[0,4,7,6,5,6,0,0,0,0,0,0,0,0,0],
+                        [2,2,3,3,2,4,9,6,5,5,6,6,6,4,2]]
+
+    solving_vector_y = [[3,3], 
+                        [3,3], 
+                        [2,2], 
+                        [3,3],
+                        [2,2],
+                        [2,3],
+                        [3,2],
+                        [2,2],
+                        [3,3],
+                        [2,2],
+                        [2,3],
+                        [2,2],
+                        [0,5],
+                        [0,4],
+                        [0,3],
+                        [0,2],
+                        [0,2],
+                        [0,3],
+                        [0,2],
+                        [0,6],
+                        [0,5],
+                        [0,2],]
+
+    return solving_vector_x, solving_vector_y
 
 if __name__ == "__main__": 
-    solving_vector_x, solving_vector_y = t_4()
+    solving_vector_x, solving_vector_y = t_6()
     ns = NonogramSolver(solving_vector_x, solving_vector_y) 
-    ns.solve(show_step=False)
+    ns.solve(show_step=True)
+    print()
     ns.show_clean()
