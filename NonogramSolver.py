@@ -14,11 +14,11 @@ class NonogramSolver:
         same_x, same_y = len(set_x), len(set_y)
         #x_miuses = 
 
-        if same_x != 1 or same_y != 1: raise Exception("Invalid inside vector sizes!")
+        #if same_x != 1 or same_y != 1: raise Exception("Invalid inside vector sizes!")
         #if set_x.pop() != len(solving_vector_y): raise Exception("Invalid vectors proportions!")
     
     def define_dimension(self, solving_vector_y, solving_vector_x):
-        return len(solving_vector_y), len(solving_vector_x[0])
+        return len(solving_vector_y), len(solving_vector_x)
         
     def show(self): 
         offset = len(self.board.solving_vector_y[0]) * 2 + 2
@@ -34,17 +34,20 @@ class NonogramSolver:
             print('[', *self.board.solving_vector_y[row_id], ']', end='')
             print(self.board.show_row(row_id))
        
-    def try_show(self, show_step):
-        if show_step: self.show()
+    def try_show(self, show_step):      #fixme
+        if show_step: self.board.show()
+        print()             
 
     def solve(self, show_step=False):
         self.solv_algo.init_solv(self.board)
-        self.try_show(show_step)
+        #self.try_show(show_step)
 
-        while not self.board.is_finished():
+        while self.board.changes_made:
+            self.board.changes_made = False
             self.solv_algo.next_solv(self.board)
-            self.try_show(show_step)
-            if self.solv_algo.steps == 5: break
+            #self.try_show(show_step)
+
+        print(f"Solution {'founded' if self.board.is_finished() else 'not found'}!")
 
     def show_clean(self):
         self.board.show()
