@@ -4,25 +4,26 @@ from SolvingAlgorithms import SolvingAlgorithms
 class NonogramSolver:
 
     def __init__(self, solving_vector_x, solving_vector_y):
+        
+        self.dimension_y, self.dimension_x  = self.define_dimension(solving_vector_y, solving_vector_x)
         self.check_err(solving_vector_x, solving_vector_y)
-        self.dimension = self.define_dimension(solving_vector_y)
-        self.board = Board(self.dimension, solving_vector_x, solving_vector_y)   
+        self.board = Board(self.dimension_x, self.dimension_y, solving_vector_x, solving_vector_y)   
         self.solv_algo = SolvingAlgorithms()
 
-    def check_err(self, solving_vector_x, solving_vector_y):
-        set_x, set_y  = set(map(len, solving_vector_x)), set(map(len, solving_vector_y))
-        same_x, same_y = len(set_x), len(set_y)
-        #x_miuses = 
+    def check_err(self, solving_vector_x, solving_vector_y, vector_x_dimension, vector_y_dimension):
+        for val in solving_vector_x:
+            if not isinstance(val, input) or sum(val) + len(val) - 1 > vector_x_dimension: raise Exception("Invalid vector value!")
 
-        if same_x != 1 or same_y != 1: raise Exception("Invalid inside vector sizes!")
-        if set_x.pop() != len(solving_vector_y): raise Exception("Invalid vectors proportions!")
+        for val in solving_vector_x:
+            if not isinstance(val, input) or sum(val) + len(val) - 1 > vector_y_dimension: raise Exception("Invalid vector value!")
+             
     
-    def define_dimension(self, solving_vector_y):
-        return len(solving_vector_y)
+    def define_dimension(self, solving_vector_y, solving_vector_x):
+        return len(solving_vector_y), len(solving_vector_x)
         
     def show(self): 
         offset = len(self.board.solving_vector_y[0]) * 2 + 2
-        minueses_amount = offset + self.board.dimension
+        minueses_amount = offset + self.board.dimension_y
         print('\n', '-' * minueses_amount, f"step no.{self.solv_algo.steps}", '-' * minueses_amount)
 
         for row in self.board.solving_vector_x:
@@ -34,13 +35,20 @@ class NonogramSolver:
             print('[', *self.board.solving_vector_y[row_id], ']', end='')
             print(self.board.show_row(row_id))
        
+    def try_show(self, show_step):      #fixme
+        if show_step: self.board.show()
+        print()             
+
     def solve(self, show_step=False):
         self.solv_algo.init_solv(self.board)
-        if show_step: self.show()
+        #self.try_show(show_step)
 
-        while not self.board.is_finished():
+        while self.board.changes_made:
+            self.board.changes_made = False
             self.solv_algo.next_solv(self.board)
-            if show_step: self.show()    
+            #self.try_show(show_step)
+
+        print(f"Solution {'founded' if self.board.is_finished() else 'not found'}!")
 
     def show_clean(self):
         self.board.show()
