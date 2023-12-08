@@ -1,50 +1,54 @@
+from Point import Point, State
+
+
 class Board:
 
-    def __init__(self, dimension_x, dimension_y, solving_vector_x, solving_vector_y):
+    def __init__(self, dimension_x: int, dimension_y: int, solving_vector_x: list, solving_vector_y: list) -> None:
         self.dimension_x, self.dimension_y = dimension_x, dimension_y
-        self.board = [[0 for _ in range(dimension_x)] for _ in range(dimension_y)]    
-        self.solving_vector_x = solving_vector_x
-        self.solving_vector_y = solving_vector_y    
-        self.changes_made = False
+        self.solving_vector_x, self.solving_vector_y = solving_vector_x, solving_vector_y  
+        
+        get_point_row = lambda: [Point() for _ in range(self.dimension_x)]
+        self.board_state = [get_point_row() for _ in range(self.dimension_y)]
+
+    def get_points_left(self) -> int:
+        return sum(map(lambda x: sum(map(lambda y: y.state == State.UNK, x)), self.board_state))
+
+    def get_init_points_left(self) -> int:
+        return self.dimension_x * self.dimension_y
     
-    def get_column(self, index):
-        return list(map(lambda row: row[index], self.board))
+    def is_resolved(self) -> bool:
+        return self.get_points_left() == 0
 
-    def get_row(self, index):
-        return self.board[index]
-        
-    def set_hit(self, x, y):
-        if self.board[x][y] == -1: raise Exception("Non hitabble!")
-        if self.board[x][y] == 0:
-            self.board[x][y] = 1
-            self.changes_made = True
-        
-    def set_miss(self, x, y):
-        if self.board[x][y] == 1: raise Exception("Non missable!")
-        if self.board[x][y] == 0:
-            self.board[x][y] = -1
-            self.changes_made = True
+    def get_dimension_y(self, index: int) -> list:
+        return list(map(lambda row: row[index], self.board_state))
 
-    def get_vector_y(self, index): 
-        return self.solving_vector_y[index]
+    def get_dimension_x(self, index: int) -> list:
+        return self.board_state[index]
+    
+    def get_dimension_internal_values(self, index: int, get_dimension: callable) -> list:
+        dimension = get_dimension(index)
+        dimension = map(Point.get_state, dimension)
+        return list(dimension)
 
-    def get_vector_x(self, index): 
-        return self.solving_vector_x[index]
+    def get_dimension_y_values(self, index: int) -> list:
+        return self.get_dimension_internal_values(index, self.get_dimension_y)
 
-    def show_row(self, index):
-        ret_str = ' '
-        for field in self.board[index]:
-            if field == 1: ret_str += ("■ ")
-            elif field == -1: ret_str += ("⨯ ")
-            else: ret_str += ("□ ")
+    def get_dimension_x_values(self, index: int) -> list:
+        return self.get_dimension_internal_values(index, self.get_dimension_x)
 
-        return ret_str
+    def set_dimension_internal(self, index: int, valid_vector: list, get_dimension: callable) -> None:
+        tmp_dimension = get_dimension(index)
+        for point, new_state in zip(tmp_dimension, valid_vector):
+            point.set_state(new_state)
 
-    def show(self):
-        for index in range(self.dimension_y): print(self.show_row(index))
+    def set_dimension_y(self, index: int, valid_vector: list) -> None:
+        self.set_dimension_internal(index, valid_vector, self.get_dimension_y)
 
-    def is_finished(self):
-        for row in self.board:
-            if 0 in row: return False
-        
-        return True
+    def set_dimension_x(self, index: int, valid_vector: list) -> None:
+        self.set_dimension_internal(index, valid_vector, self.get_dimension_x)
+
+    def __repr__(self) -> str:
+        clean_str_row = lambda str_row: str(str_row).replace('\'', '').replace(',', '')[1:-1]
+        make_str_row = lambda str_row: clean_str_row(list(map(str, str_row)))
+        make_str_board = lambda str_board: str.join('\n' ,list(map(make_str_row, str_board)))
+        return make_str_board(self.board_state)
