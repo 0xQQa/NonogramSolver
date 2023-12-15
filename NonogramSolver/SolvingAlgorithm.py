@@ -27,10 +27,10 @@ class SolvingAlgorithm:
         self.__resolve_one_dimension(self.board.dimension_horizontal, self.board.solving_vector_horizontal, self.board.set_dimension_horizontal, self.board.get_dimension_horizontal)
         self.__resolve_one_dimension(self.board.dimension_vertical, self.board.solving_vector_vertical, self.board.set_dimension_vertical, self.board.get_dimension_vertical)
 
-    def try_resolve_nonogram(self, intertactive_output) -> (bool, int, float):
+    def try_resolve_nonogram(self, /, interactive_output: bool = False) -> (bool, int, float):
         start = timer()
 
-        if intertactive_output:
+        if interactive_output:
             self.loading_prompt.print_loading_line(self.board)
         
         self.__resolve_initial_state()
@@ -41,7 +41,7 @@ class SolvingAlgorithm:
         
         prev_points_left = init_point_left
         while cur_points_left < prev_points_left:
-            if intertactive_output:
+            if interactive_output:
                 self.loading_prompt.print_loading_line(self.board)
 
             prev_points_left = cur_points_left

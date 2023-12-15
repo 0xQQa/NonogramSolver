@@ -2,10 +2,10 @@ from typing import Final
 
 
 class Point:
-    MISS:               Final[int] = -1
-    HIT:                Final[int] = 1
-    UNK:                Final[int] = 0
-    __REPR_STATE_DICT:  dict = {MISS: ' ', UNK: '�', HIT: '■'}
+    MISS: Final[int]            = -1
+    HIT: Final[int]             = 1
+    UNK: Final[int]             = 0
+    __REPR_STATE_DICT: dict     = {MISS: ' ', UNK: '�', HIT: '■'}
 
     def __init__(self, state:int=0) -> None:
         self.state = state

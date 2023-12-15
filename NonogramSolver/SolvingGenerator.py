@@ -2,6 +2,7 @@ from itertools import chain, repeat
 from Point import Point
 from Board import Board
 
+
 class SolvingGenerator:
 
     def __init__(self, board: Board) -> None:

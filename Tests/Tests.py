@@ -10,7 +10,7 @@ class TestSolvingAlgorithm(unittest.TestCase):
 
     def internal_test_nonogram(self, solving_vector_horizontal: list[list],solving_vector_vertical: list[list]) -> bool:
         nonogram_solver = NonogramSolver(solving_vector_horizontal, solving_vector_vertical)
-        solving_result, *_ = nonogram_solver.try_resolve(intertactive_output=True)
+        solving_result, *_ = nonogram_solver.try_resolve(interactive_output=True)
         return solving_result
     
     #https://i.stack.imgur.com/EbgM8m.png
